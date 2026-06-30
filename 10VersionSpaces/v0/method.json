@@ -1,0 +1,156 @@
+File: Method.json
+
+{
+"model": "Method",
+"methods": [
+{
+"name": "VersionSpacesSolution",
+"description": "Main FSM for learning concepts using version spaces.",
+"inputParameters": [
+"initialConfiguration: configuration",
+"knowledgeBase: knowledgeBase"
+],
+"outputParameters": [
+"finalConfiguration: configuration"
+],
+"organizer": {
+"startState": "S0",
+"successState": "S4_Complete",
+"failureState": "S_Fail",
+"states": [
+{
+"name": "S0",
+"goalInvocation": {
+"goalReference": "InitializeModels",
+"type": "task",
+"actualArguments": [
+"initialConfiguration"
+]
+}
+},
+{
+"name": "S1",
+"goalInvocation": {
+"goalReference": "ProcessPositiveExample",
+"type": "task",
+"actualArguments": [
+"initialConfiguration"
+]
+}
+},
+{
+"name": "S2",
+"goalInvocation": {
+"goalReference": "ProcessNegativeExample",
+"type": "task",
+"actualArguments": [
+"initialConfiguration"
+]
+}
+},
+{
+"name": "S3",
+"goalInvocation": {
+"goalReference": "ConvergeConcept",
+"type": "task",
+"actualArguments": [
+"initialConfiguration"
+]
+}
+},
+{
+"name": "S4_Complete",
+"goalInvocation": {
+"goalReference": "Complete",
+"type": "task",
+"actualArguments": []
+}
+},
+{
+"name": "S_Fail",
+"goalInvocation": {
+"goalReference": "FailureGoal",
+"type": "task",
+"actualArguments": []
+}
+}
+],
+"transitions": [
+{
+"sourceState": "S0",
+"targetState": "S1",
+"dataCondition": "!isEmpty(models)"
+},
+{
+"sourceState": "S1",
+"targetState": "S2",
+"dataCondition": "!isEmpty(generalizedSpecificModel)"
+},
+{
+"sourceState": "S2",
+"targetState": "S3",
+"dataCondition": "!isEmpty(specializedGeneralModel)"
+},
+{
+"sourceState": "S3",
+"targetState": "S4_Complete",
+"dataCondition": "converged(versionSpace)"
+},
+{
+"sourceState": "S3",
+"targetState": "S_Fail",
+"dataCondition": "!converged(versionSpace)"
+}
+]
+}
+},
+{
+"name": "InitializeModelsMechanism",
+"description": "Construct the most specific and most general models from the first example.",
+"inputParameters": [
+"initialConfiguration: configuration"
+],
+"outputParameters": [
+"modelConfiguration: configuration"
+],
+"requires": "firstExampleAvailable",
+"provides": "modelsInitialized"
+},
+{
+"name": "ProcessPositiveExampleMechanism",
+"description": "Generalize the specific model and prune inconsistent general models.",
+"inputParameters": [
+"modelConfiguration: configuration"
+],
+"outputParameters": [
+"updatedConfiguration: configuration"
+],
+"requires": "positiveExampleAvailable",
+"provides": "specificModelGeneralized"
+},
+{
+"name": "ProcessNegativeExampleMechanism",
+"description": "Specialize the general model and prune inconsistent models.",
+"inputParameters": [
+"modelConfiguration: configuration"
+],
+"outputParameters": [
+"updatedConfiguration: configuration"
+],
+"requires": "negativeExampleAvailable",
+"provides": "generalModelSpecialized"
+},
+{
+"name": "ConvergeConceptMechanism",
+"description": "Determine whether version space models have converged.",
+"inputParameters": [
+"modelConfiguration: configuration"
+],
+"outputParameters": [
+"finalConfiguration: configuration"
+],
+"requires": "modelsAvailable",
+"provides": "conceptCharacterization"
+}
+]
+}

@@ -1,0 +1,109 @@
+{
+  "model": "Knowledge",
+  "concepts": [
+    {
+      "name": "configuration"
+    },
+    {
+      "name": "workingMemory"
+    },
+    {
+      "name": "longTermMemory"
+    },
+    {
+      "name": "productionRule"
+    },
+    {
+      "name": "ruleSet"
+    },
+    {
+      "name": "operator"
+    },
+    {
+      "name": "percept"
+    },
+    {
+      "name": "goal"
+    },
+    {
+      "name": "episodicKnowledge"
+    },
+    {
+      "name": "semanticKnowledge"
+    },
+    {
+      "name": "proceduralKnowledge"
+    }
+  ],
+  "instances": [
+    {
+      "name": "initialConfiguration",
+      "concept": "configuration",
+      "values": {
+        "inning": 7,
+        "outs": 2,
+        "runners": "secondAndThird",
+        "goal": "escapeInning"
+      }
+    },
+    {
+      "name": "finalConfiguration",
+      "concept": "configuration",
+      "values": {
+        "selectedAction": "intentionalWalk"
+      }
+    },
+    {
+      "name": "intentionalWalkOperator",
+      "concept": "operator"
+    },
+    {
+      "name": "throwCurveBallOperator",
+      "concept": "operator"
+    },
+    {
+      "name": "throwFastBallOperator",
+      "concept": "operator"
+    },
+    {
+      "name": "workingMemoryInstance",
+      "concept": "workingMemory"
+    }
+  ],
+  "relations": [
+    {
+      "name": "contains",
+      "domain": "workingMemory",
+      "range": "percept"
+    },
+    {
+      "name": "stores",
+      "domain": "longTermMemory",
+      "range": "productionRule"
+    },
+    {
+      "name": "suggests",
+      "domain": "productionRule",
+      "range": "operator"
+    },
+    {
+      "name": "learns",
+      "domain": "episodicKnowledge",
+      "range": "productionRule"
+    }
+  ],
+  "triples": [
+    {
+      "instance1": "workingMemoryInstance",
+      "relation": "contains",
+      "instance2": "initialConfiguration"
+    }
+  ],
+  "assertions": [
+    {
+      "name": "goodActionSelection",
+      "description": "A valid operator has been selected from production rules or learned through chunking.",
+      "equivalentTo": "SelectActionUsingProductionSystem"
+    }
+  ]
+}

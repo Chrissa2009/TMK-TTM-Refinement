@@ -1,0 +1,92 @@
+{
+  "model": "Knowledge",
+  "concepts": [
+    {
+      "name": "recordedCase",
+      "description": "An encapsulation of a past experience."
+    },
+    {
+      "name": "newProblem",
+      "description": "A problem requiring a solution based on prior cases."
+    },
+    {
+      "name": "caseMemory",
+      "description": "A collection of previously recorded cases."
+    },
+    {
+      "name": "problemRepresentation",
+      "description": "Feature-space representation of a problem."
+    },
+    {
+      "name": "distanceSet",
+      "description": "Distances between the new problem and stored cases."
+    },
+    {
+      "name": "configuration",
+      "description": "State of a problem before and after case retrieval."
+    }
+  ],
+  "instances": [
+    {
+      "name": "blackBlockCase",
+      "concept": "recordedCase"
+    },
+    {
+      "name": "blueBlockCase",
+      "concept": "recordedCase"
+    },
+    {
+      "name": "navigationRouteD",
+      "concept": "recordedCase"
+    },
+    {
+      "name": "initialConfiguration",
+      "concept": "configuration"
+    },
+    {
+      "name": "finalConfiguration",
+      "concept": "configuration"
+    }
+  ],
+  "relations": [
+    {
+      "name": "storedIn",
+      "domain": "recordedCase",
+      "range": "caseMemory"
+    },
+    {
+      "name": "resembles",
+      "domain": "newProblem",
+      "range": "recordedCase"
+    },
+    {
+      "name": "retrieves",
+      "domain": "caseMemory",
+      "range": "recordedCase"
+    },
+    {
+      "name": "appliesSolutionOf",
+      "domain": "newProblem",
+      "range": "recordedCase"
+    }
+  ],
+  "triples": [
+    {
+      "instance1": "blackBlockCase",
+      "relation": "storedIn",
+      "instance2": "caseMemory"
+    },
+    {
+      "instance1": "navigationRouteD",
+      "relation": "storedIn",
+      "instance2": "caseMemory"
+    }
+  ],
+  "assertions": [
+    {
+      "name": "goodCaseRetrieval",
+      "description": "The solution applied to the new problem comes from the most similar recorded case.",
+      "equivalentTo": "retrieves(caseMemory, recordedCase) && appliesSolutionOf(newProblem, recordedCase)"
+    }
+  ]
+}

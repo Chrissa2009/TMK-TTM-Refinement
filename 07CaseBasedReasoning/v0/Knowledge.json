@@ -1,0 +1,120 @@
+{
+  "model": "Knowledge",
+  "concepts": [
+    {
+      "name": "problem",
+      "description": "A new situation requiring a solution."
+    },
+    {
+      "name": "case",
+      "description": "A previously encountered problem-solution pair."
+    },
+    {
+      "name": "caseMemory",
+      "description": "Repository of stored cases."
+    },
+    {
+      "name": "solution",
+      "description": "A candidate or validated answer to a problem."
+    },
+    {
+      "name": "retrievalMethod",
+      "description": "Method for locating relevant cases."
+    },
+    {
+      "name": "adaptationMethod",
+      "description": "Method for modifying a retrieved case."
+    },
+    {
+      "name": "configuration",
+      "description": "State of a case-based reasoning problem."
+    }
+  ],
+  "instances": [
+    {
+      "name": "initialConfiguration",
+      "concept": "configuration",
+      "values": {
+        "state": "newProblemPresented"
+      }
+    },
+    {
+      "name": "finalConfiguration",
+      "concept": "configuration",
+      "values": {
+        "state": "successfulSolutionStored"
+      }
+    },
+    {
+      "name": "KNearestNeighbor",
+      "concept": "retrievalMethod",
+      "values": {}
+    },
+    {
+      "name": "Indexing",
+      "concept": "retrievalMethod",
+      "values": {}
+    },
+    {
+      "name": "DiscriminationTree",
+      "concept": "retrievalMethod",
+      "values": {}
+    },
+    {
+      "name": "ModelBasedAdaptation",
+      "concept": "adaptationMethod",
+      "values": {}
+    },
+    {
+      "name": "RecursiveCaseBasedAdaptation",
+      "concept": "adaptationMethod",
+      "values": {}
+    },
+    {
+      "name": "RuleBasedAdaptation",
+      "concept": "adaptationMethod",
+      "values": {}
+    }
+  ],
+  "relations": [
+    {
+      "name": "retrieves",
+      "domain": "retrievalMethod",
+      "range": "case"
+    },
+    {
+      "name": "adapts",
+      "domain": "adaptationMethod",
+      "range": "solution"
+    },
+    {
+      "name": "storesIn",
+      "domain": "case",
+      "range": "caseMemory"
+    },
+    {
+      "name": "solves",
+      "domain": "solution",
+      "range": "problem"
+    }
+  ],
+  "triples": [
+    {
+      "instance1": "KNearestNeighbor",
+      "relation": "retrieves",
+      "instance2": "case"
+    },
+    {
+      "instance1": "ModelBasedAdaptation",
+      "relation": "adapts",
+      "instance2": "solution"
+    }
+  ],
+  "assertions": [
+    {
+      "name": "goodCaseBasedSolution",
+      "description": "A similar case is retrieved, successfully adapted, evaluated, and stored as a new case.",
+      "equivalentTo": "CaseBasedReasoningSolution"
+    }
+  ]
+}

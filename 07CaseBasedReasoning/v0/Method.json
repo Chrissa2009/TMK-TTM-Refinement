@@ -1,0 +1,157 @@
+{
+  "model": "Method",
+  "methods": [
+    {
+      "name": "CaseBasedReasoningSolution",
+      "description": "Main FSM implementing retrieval, adaptation, evaluation, and storage.",
+      "inputParameters": [
+        "initialConfiguration: configuration",
+        "caseMemory: caseMemory"
+      ],
+      "outputParameters": ["finalConfiguration: configuration"],
+      "organizer": {
+        "startState": "CBR_S0",
+        "successState": "CBR_Done",
+        "failureState": "CBR_Fail",
+        "states": [
+          {
+            "name": "CBR_S0",
+            "goalInvocation": {
+              "goalReference": "RetrieveCase",
+              "type": "task",
+              "actualArguments": ["initialConfiguration", "caseMemory"]
+            }
+          },
+          {
+            "name": "CBR_S1",
+            "goalInvocation": {
+              "goalReference": "AdaptCase",
+              "type": "task",
+              "actualArguments": ["retrievedCase", "initialConfiguration"]
+            }
+          },
+          {
+            "name": "CBR_S2",
+            "goalInvocation": {
+              "goalReference": "EvaluateCase",
+              "type": "task",
+              "actualArguments": ["candidateSolution"]
+            }
+          },
+          {
+            "name": "CBR_S3",
+            "goalInvocation": {
+              "goalReference": "StoreCase",
+              "type": "task",
+              "actualArguments": ["evaluatedSolution", "caseMemory"]
+            }
+          },
+          {
+            "name": "CBR_Done",
+            "goalInvocation": {
+              "goalReference": "Complete",
+              "type": "task",
+              "actualArguments": []
+            }
+          },
+          {
+            "name": "CBR_Fail",
+            "goalInvocation": {
+              "goalReference": "FailureGoal",
+              "type": "task",
+              "actualArguments": []
+            }
+          }
+        ],
+        "transitions": [
+          {
+            "sourceState": "CBR_S0",
+            "targetState": "CBR_S1",
+            "dataCondition": "!isEmpty(retrievedCase)"
+          },
+          {
+            "sourceState": "CBR_S0",
+            "targetState": "CBR_Fail",
+            "dataCondition": "isEmpty(retrievedCase)"
+          },
+          {
+            "sourceState": "CBR_S1",
+            "targetState": "CBR_S2",
+            "dataCondition": "!isEmpty(candidateSolution)"
+          },
+          {
+            "sourceState": "CBR_S1",
+            "targetState": "CBR_Fail",
+            "dataCondition": "isEmpty(candidateSolution)"
+          },
+          {
+            "sourceState": "CBR_S2",
+            "targetState": "CBR_S3",
+            "dataCondition": "evaluatedSolutionValid(evaluatedSolution)"
+          },
+          {
+            "sourceState": "CBR_S2",
+            "targetState": "CBR_Fail",
+            "dataCondition": "!evaluatedSolutionValid(evaluatedSolution)"
+          },
+          {
+            "sourceState": "CBR_S3",
+            "targetState": "CBR_Done",
+            "dataCondition": "goodCaseBasedSolution(finalConfiguration)"
+          },
+          {
+            "sourceState": "CBR_S3",
+            "targetState": "CBR_Fail",
+            "dataCondition": "!goodCaseBasedSolution(finalConfiguration)"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RetrieveCaseMechanism",
+      "description": "Retrieve a similar case using indexing, discrimination trees, or nearest-neighbor retrieval.",
+      "inputParameters": [
+        "initialConfiguration: configuration",
+        "caseMemory: caseMemory"
+      ],
+      "outputParameters": ["retrievedCase: case"]
+    },
+    {
+      "name": "AdaptCaseMechanism",
+      "description": "Adapt the retrieved case using model-based adaptation, recursive case-based adaptation, or rule-based heuristics.",
+      "inputParameters": [
+        "retrievedCase: case",
+        "initialConfiguration: configuration"
+      ],
+      "outputParameters": ["candidateSolution: solution"]
+    },
+    {
+      "name": "EvaluateCaseMechanism",
+      "description": "Evaluate a candidate solution through simulation or execution.",
+      "inputParameters": ["candidateSolution: solution"],
+      "outputParameters": ["evaluatedSolution: solution"]
+    },
+    {
+      "name": "StoreCaseMechanism",
+      "description": "Store the new problem-solution pair as a case and index it for future retrieval.",
+      "inputParameters": [
+        "evaluatedSolution: solution",
+        "caseMemory: caseMemory"
+      ],
+      "outputParameters": ["finalConfiguration: configuration"]
+    },
+    {
+      "name": "CaseBasedReasoningAssertions",
+      "description": "Assertions used by the CBR process.",
+      "inputParameters": [],
+      "outputParameters": [],
+      "assertions": [
+        {
+          "name": "goodCaseBasedSolution",
+          "description": "A retrieved case was adapted, evaluated successfully, and stored for future use.",
+          "equivalentTo": "StoreCaseMechanism"
+        }
+      ]
+    }
+  ]
+}

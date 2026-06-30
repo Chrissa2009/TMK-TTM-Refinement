@@ -1,0 +1,109 @@
+File: Knowledge.json
+
+{
+"model": "Knowledge",
+"concepts": [
+{
+"name": "concept",
+"description": "A learned characterization of a category."
+},
+{
+"name": "example",
+"description": "A positive or negative instance used for learning."
+},
+{
+"name": "specificModel",
+"description": "The most specific model consistent with observed examples."
+},
+{
+"name": "generalModel",
+"description": "The most general model consistent with observed examples."
+},
+{
+"name": "versionSpace",
+"description": "The space bounded by specific and general models."
+},
+{
+"name": "configuration",
+"description": "A representation of examples and current models."
+}
+],
+"instances": [
+{
+"name": "foodAllergyExample1",
+"concept": "example",
+"values": {
+"restaurant": "Sam's",
+"meal": "Breakfast",
+"day": "Friday",
+"cost": "Cheap",
+"reaction": "Yes"
+}
+},
+{
+"name": "foodAllergyExample2",
+"concept": "example",
+"values": {
+"restaurant": "Kim's",
+"meal": "Lunch",
+"day": "Saturday",
+"cost": "Cheap",
+"reaction": "No"
+}
+},
+{
+"name": "initialConfiguration",
+"concept": "configuration",
+"values": {
+"specificModel": "empty",
+"generalModel": "empty",
+"examplesProcessed": 0
+}
+},
+{
+"name": "finalConfiguration",
+"concept": "configuration",
+"values": {
+"specificModel": "converged",
+"generalModel": "converged",
+"examplesProcessed": "all"
+}
+}
+],
+"relations": [
+{
+"name": "containsExample",
+"domain": "configuration",
+"range": "example"
+},
+{
+"name": "generalizes",
+"domain": "specificModel",
+"range": "concept"
+},
+{
+"name": "specializes",
+"domain": "generalModel",
+"range": "concept"
+},
+{
+"name": "convergesTo",
+"domain": "versionSpace",
+"range": "concept"
+}
+],
+"triples": [
+{
+"instance1": "initialConfiguration",
+"relation": "containsExample",
+"instance2": "foodAllergyExample1"
+}
+],
+"assertions": [
+{
+"name": "goodVersionSpace",
+"description": "The specific and general models converge to a stable concept characterization consistent with the examples.",
+"equivalentTo": "ConvergeConceptMechanism"
+}
+]
+}

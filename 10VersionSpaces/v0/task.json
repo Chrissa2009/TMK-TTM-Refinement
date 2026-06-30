@@ -1,0 +1,119 @@
+File: Task.json
+
+{
+"model": "Task",
+"tasks": [
+{
+"name": "LearnConceptUsingVersionSpaces",
+"description": "Incrementally learn a concept by refining specific and general models until they converge.",
+"inputParameters": [
+"initialConfiguration: configuration",
+"knowledgeBase: knowledgeBase"
+],
+"outputParameters": [
+"finalConfiguration: configuration"
+],
+"given": "examplesAvailable(initialConfiguration)",
+"makes": "goodVersionSpace(finalConfiguration)",
+"means": [
+{
+"mechanismReference": "VersionSpacesSolution",
+"actualArguments": [
+"initialConfiguration",
+"finalConfiguration"
+]
+}
+]
+},
+{
+"name": "InitializeModels",
+"description": "Construct the most specific and most general models from the first example.",
+"inputParameters": [
+"initialConfiguration: configuration"
+],
+"outputParameters": [
+"modelConfiguration: configuration"
+],
+"means": [
+{
+"mechanismReference": "InitializeModelsMechanism",
+"actualArguments": [
+"initialConfiguration",
+"modelConfiguration"
+]
+}
+]
+},
+{
+"name": "ProcessPositiveExample",
+"description": "Generalize the specific model and prune inconsistent general models.",
+"inputParameters": [
+"modelConfiguration: configuration"
+],
+"outputParameters": [
+"updatedConfiguration: configuration"
+],
+"means": [
+{
+"mechanismReference": "ProcessPositiveExampleMechanism",
+"actualArguments": [
+"modelConfiguration",
+"updatedConfiguration"
+]
+}
+]
+},
+{
+"name": "ProcessNegativeExample",
+"description": "Specialize the general model and prune inconsistent models.",
+"inputParameters": [
+"modelConfiguration: configuration"
+],
+"outputParameters": [
+"updatedConfiguration: configuration"
+],
+"means": [
+{
+"mechanismReference": "ProcessNegativeExampleMechanism",
+"actualArguments": [
+"modelConfiguration",
+"updatedConfiguration"
+]
+}
+]
+},
+{
+"name": "ConvergeConcept",
+"description": "Determine whether the specific and general models have converged on a concept characterization.",
+"inputParameters": [
+"modelConfiguration: configuration"
+],
+"outputParameters": [
+"finalConfiguration: configuration"
+],
+"means": [
+{
+"mechanismReference": "ConvergeConceptMechanism",
+"actualArguments": [
+"modelConfiguration",
+"finalConfiguration"
+]
+}
+]
+},
+{
+"name": "FailureGoal",
+"description": "Represents unsuccessful execution of concept learning.",
+"inputParameters": [],
+"outputParameters": [],
+"means": []
+},
+{
+"name": "Complete",
+"description": "Represents successful completion of concept learning.",
+"inputParameters": [],
+"outputParameters": [],
+"means": []
+}
+]
+}

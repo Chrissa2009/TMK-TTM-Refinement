@@ -1,0 +1,134 @@
+{
+  "model": "Task",
+  "tasks": [
+    {
+      "name": "SolveByRecordingCases",
+      "description": "Solve a new problem by retrieving the most similar previously recorded case and applying its solution.",
+      "inputParameters": [
+        "initialConfiguration: configuration",
+        "caseMemory: caseMemory"
+      ],
+      "outputParameters": [
+        "finalConfiguration: configuration"
+      ],
+      "given": "initialConfiguration != null && caseMemory != null",
+      "makes": "goodCaseRetrieval(finalConfiguration)",
+      "means": [
+        {
+          "mechanismReference": "RecordingCasesSolution",
+          "actualArguments": [
+            "initialConfiguration",
+            "caseMemory",
+            "finalConfiguration"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "RepresentProblem",
+      "description": "Represent the new problem and recorded cases in a feature space.",
+      "inputParameters": [
+        "initialConfiguration: configuration"
+      ],
+      "outputParameters": [
+        "problemRepresentation: problemRepresentation"
+      ],
+      "given": "initialConfiguration != null",
+      "makes": "!isEmpty(problemRepresentation)",
+      "means": [
+        {
+          "mechanismReference": "RepresentProblemMechanism",
+          "actualArguments": [
+            "initialConfiguration",
+            "problemRepresentation"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ComputeSimilarity",
+      "description": "Compute similarity or distance between the new problem and previously recorded cases.",
+      "inputParameters": [
+        "problemRepresentation: problemRepresentation",
+        "caseMemory: caseMemory"
+      ],
+      "outputParameters": [
+        "distanceSet: distanceSet"
+      ],
+      "given": "!isEmpty(problemRepresentation)",
+      "makes": "!isEmpty(distanceSet)",
+      "means": [
+        {
+          "mechanismReference": "ComputeSimilarityMechanism",
+          "actualArguments": [
+            "problemRepresentation",
+            "caseMemory",
+            "distanceSet"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "RetrieveNearestCase",
+      "description": "Retrieve the most similar recorded case using nearest neighbor or k-nearest neighbor methods.",
+      "inputParameters": [
+        "distanceSet: distanceSet"
+      ],
+      "outputParameters": [
+        "retrievedCase: recordedCase"
+      ],
+      "given": "!isEmpty(distanceSet)",
+      "makes": "!isEmpty(retrievedCase)",
+      "means": [
+        {
+          "mechanismReference": "RetrieveNearestCaseMechanism",
+          "actualArguments": [
+            "distanceSet",
+            "retrievedCase"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ApplyCaseSolution",
+      "description": "Apply the solution associated with the retrieved case to the new problem.",
+      "inputParameters": [
+        "retrievedCase: recordedCase",
+        "initialConfiguration: configuration"
+      ],
+      "outputParameters": [
+        "finalConfiguration: configuration"
+      ],
+      "given": "!isEmpty(retrievedCase)",
+      "makes": "goodCaseRetrieval(finalConfiguration)",
+      "means": [
+        {
+          "mechanismReference": "ApplyCaseSolutionMechanism",
+          "actualArguments": [
+            "retrievedCase",
+            "initialConfiguration",
+            "finalConfiguration"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "FailureGoal",
+      "description": "Represents unsuccessful retrieval or application of a recorded case.",
+      "inputParameters": [],
+      "outputParameters": [],
+      "given": "",
+      "makes": "",
+      "means": []
+    },
+    {
+      "name": "Complete",
+      "description": "Represents successful completion of learning by recording cases.",
+      "inputParameters": [],
+      "outputParameters": [],
+      "given": "",
+      "makes": "",
+      "means": []
+    }
+  ]
+}

@@ -1,0 +1,105 @@
+{
+  "model": "Task",
+  "tasks": [
+    {
+      "name": "SolveProblemUsingCaseBasedReasoning",
+      "description": "Address a new problem by retrieving, adapting, evaluating, and storing solutions from similar previously encountered problems.",
+      "inputParameters": [
+        "initialConfiguration: configuration",
+        "caseMemory: caseMemory"
+      ],
+      "outputParameters": ["finalConfiguration: configuration"],
+      "given": "validProblem(initialConfiguration)",
+      "makes": "goodCaseBasedSolution(finalConfiguration)",
+      "means": [
+        {
+          "mechanismReference": "CaseBasedReasoningSolution",
+          "actualArguments": [
+            "initialConfiguration",
+            "caseMemory",
+            "finalConfiguration"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "RetrieveCase",
+      "description": "Retrieve a relevant prior case from case memory using similarity-based retrieval.",
+      "inputParameters": [
+        "initialConfiguration: configuration",
+        "caseMemory: caseMemory"
+      ],
+      "outputParameters": ["retrievedCase: case"],
+      "given": "caseMemoryAvailable(caseMemory)",
+      "makes": "retrievedRelevantCase(retrievedCase)",
+      "means": [
+        {
+          "mechanismReference": "RetrieveCaseMechanism",
+          "actualArguments": ["initialConfiguration", "caseMemory"]
+        }
+      ]
+    },
+    {
+      "name": "AdaptCase",
+      "description": "Adapt a retrieved case to fit the requirements of the new problem.",
+      "inputParameters": [
+        "retrievedCase: case",
+        "initialConfiguration: configuration"
+      ],
+      "outputParameters": ["candidateSolution: solution"],
+      "given": "retrievedRelevantCase(retrievedCase)",
+      "makes": "adaptedSolution(candidateSolution)",
+      "means": [
+        {
+          "mechanismReference": "AdaptCaseMechanism",
+          "actualArguments": ["retrievedCase", "initialConfiguration"]
+        }
+      ]
+    },
+    {
+      "name": "EvaluateCase",
+      "description": "Evaluate the adapted solution through simulation or execution.",
+      "inputParameters": ["candidateSolution: solution"],
+      "outputParameters": ["evaluatedSolution: solution"],
+      "given": "adaptedSolution(candidateSolution)",
+      "makes": "evaluatedSolutionValid(evaluatedSolution)",
+      "means": [
+        {
+          "mechanismReference": "EvaluateCaseMechanism",
+          "actualArguments": ["candidateSolution"]
+        }
+      ]
+    },
+    {
+      "name": "StoreCase",
+      "description": "Store the new problem and successful solution as a new case in memory.",
+      "inputParameters": [
+        "evaluatedSolution: solution",
+        "caseMemory: caseMemory"
+      ],
+      "outputParameters": ["finalConfiguration: configuration"],
+      "given": "evaluatedSolutionValid(evaluatedSolution)",
+      "makes": "goodCaseBasedSolution(finalConfiguration)",
+      "means": [
+        {
+          "mechanismReference": "StoreCaseMechanism",
+          "actualArguments": ["evaluatedSolution", "caseMemory"]
+        }
+      ]
+    },
+    {
+      "name": "FailureGoal",
+      "description": "Represents unsuccessful case-based reasoning.",
+      "inputParameters": [],
+      "outputParameters": [],
+      "means": []
+    },
+    {
+      "name": "Complete",
+      "description": "Represents successful completion of case-based reasoning.",
+      "inputParameters": [],
+      "outputParameters": [],
+      "means": []
+    }
+  ]
+}

@@ -1,0 +1,154 @@
+{
+  "model": "Method",
+  "methods": [
+    {
+      "name": "ProductionSystemSolution",
+      "description": "Top-level production system for mapping percepts and goals into actions.",
+      "inputParameters": [
+        "initialConfiguration: configuration",
+        "knowledgeBase: knowledgeBase"
+      ],
+      "outputParameters": [
+        "finalConfiguration: configuration"
+      ],
+      "organizer": {
+        "startState": "PS_S0",
+        "successState": "PS_Done",
+        "failureState": "PS_Fail",
+        "states": [
+          {
+            "name": "PS_S0",
+            "goalInvocation": {
+              "goalReference": "RepresentPerceptsAndGoals",
+              "type": "task",
+              "actualArguments": [
+                "initialConfiguration"
+              ]
+            }
+          },
+          {
+            "name": "PS_S1",
+            "goalInvocation": {
+              "goalReference": "MatchProductionRules",
+              "type": "task",
+              "actualArguments": [
+                "workingMemory"
+              ]
+            }
+          },
+          {
+            "name": "PS_S2",
+            "goalInvocation": {
+              "goalReference": "SelectOperator",
+              "type": "task",
+              "actualArguments": [
+                "activatedRules"
+              ]
+            }
+          },
+          {
+            "name": "PS_Done",
+            "goalInvocation": {
+              "goalReference": "Complete",
+              "type": "task",
+              "actualArguments": []
+            }
+          },
+          {
+            "name": "PS_Fail",
+            "goalInvocation": {
+              "goalReference": "ResolveImpasseByChunking",
+              "type": "task",
+              "actualArguments": [
+                "workingMemory"
+              ]
+            }
+          }
+        ],
+        "transitions": [
+          {
+            "sourceState": "PS_S0",
+            "targetState": "PS_S1",
+            "dataCondition": "!isEmpty(workingMemory)"
+          },
+          {
+            "sourceState": "PS_S1",
+            "targetState": "PS_S2",
+            "dataCondition": "!isEmpty(activatedRules)"
+          },
+          {
+            "sourceState": "PS_S2",
+            "targetState": "PS_Done",
+            "dataCondition": "!isEmpty(selectedOperator)"
+          },
+          {
+            "sourceState": "PS_S2",
+            "targetState": "PS_Fail",
+            "dataCondition": "isEmpty(selectedOperator)"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RepresentPerceptsMechanism",
+      "description": "Store percepts and goals in working memory as feature-value structures.",
+      "inputParameters": [
+        "initialConfiguration: configuration"
+      ],
+      "outputParameters": [
+        "workingMemory: workingMemory"
+      ],
+      "requires": "validConfiguration(initialConfiguration)",
+      "provides": "!isEmpty(workingMemory)"
+    },
+    {
+      "name": "RuleMatchingMechanism",
+      "description": "Match working memory contents against antecedents of procedural production rules.",
+      "inputParameters": [
+        "workingMemory: workingMemory"
+      ],
+      "outputParameters": [
+        "activatedRules: ruleSet"
+      ],
+      "requires": "!isEmpty(workingMemory)",
+      "provides": "!isEmpty(activatedRules)"
+    },
+    {
+      "name": "OperatorSelectionMechanism",
+      "description": "Select an operator from consequences of activated rules.",
+      "inputParameters": [
+        "activatedRules: ruleSet"
+      ],
+      "outputParameters": [
+        "selectedOperator: operator"
+      ],
+      "requires": "!isEmpty(activatedRules)",
+      "provides": "!isEmpty(selectedOperator)"
+    },
+    {
+      "name": "ChunkingMechanism",
+      "description": "Create a new production rule using episodic memory to resolve an impasse.",
+      "inputParameters": [
+        "workingMemory: workingMemory"
+      ],
+      "outputParameters": [
+        "newRule: productionRule"
+      ],
+      "requires": "impasse(workingMemory)",
+      "provides": "!isEmpty(newRule)"
+    },
+    {
+      "name": "ProductionAssertions",
+      "description": "Assertions used in the production system model.",
+      "inputParameters": [],
+      "outputParameters": [],
+      "assertions": [
+        {
+          "name": "impasse",
+          "description": "Decision state in which multiple operators are suggested or insufficient knowledge exists.",
+          "equivalentTo": "ResolveImpasseByChunking"
+        }
+      ]
+    }
+  ]
+}
