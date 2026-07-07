@@ -1,0 +1,156 @@
+{
+"model": "Method",
+"methods": [
+{
+"name": "MeansEndsAnalysisSolution",
+"description": "Main finite-state procedure for solving a problem by repeatedly reducing differences.",
+"inputParameters": [
+"initialConfiguration: configuration",
+"goalConfiguration: configuration",
+"operatorSet: operatorSet"
+],
+"outputParameters": [
+"finalConfiguration: configuration"
+],
+"organizer": {
+"startState": "S0",
+"successState": "S4_Complete",
+"failureState": "S_Fail",
+"initialization": "currentState = initialConfiguration",
+"states": [
+{
+"name": "S0",
+"goalInvocation": {
+"goalReference": "CompareStates",
+"type": "task",
+"actualArguments": [
+"currentState",
+"goalConfiguration"
+]
+}
+},
+{
+"name": "S1",
+"goalInvocation": {
+"goalReference": "FindDifferences",
+"type": "task",
+"actualArguments": [
+"stateComparison"
+]
+}
+},
+{
+"name": "S2",
+"goalInvocation": {
+"goalReference": "SelectDifferenceReducingOperator",
+"type": "task",
+"actualArguments": [
+"differenceSet",
+"operatorSet"
+]
+}
+},
+{
+"name": "S3",
+"goalInvocation": {
+"goalReference": "ApplyOperator",
+"type": "task",
+"actualArguments": [
+"selectedOperator",
+"currentState"
+]
+}
+},
+{
+"name": "S4_Complete",
+"goalInvocation": {
+"goalReference": "Complete",
+"type": "task",
+"actualArguments": []
+}
+},
+{
+"name": "S_Fail",
+"goalInvocation": {
+"goalReference": "FailureGoal",
+"type": "task",
+"actualArguments": []
+}
+}
+],
+"transitions": [
+{
+"sourceState": "S0",
+"targetState": "S1",
+"dataCondition": "!isEmpty(stateComparison)"
+},
+{
+"sourceState": "S1",
+"targetState": "S2",
+"dataCondition": "!isEmpty(differenceSet)"
+},
+{
+"sourceState": "S2",
+"targetState": "S3",
+"dataCondition": "!isEmpty(selectedOperator)"
+},
+{
+"sourceState": "S3",
+"targetState": "S4_Complete",
+"dataCondition": "goodSolution(newState)"
+},
+{
+"sourceState": "S3",
+"targetState": "S0",
+"dataCondition": "reducesDifference(newState) && !goodSolution(newState)",
+"dataEffect": "currentState = newState"
+},
+{
+"sourceState": "S0",
+"targetState": "S_Fail",
+"dataCondition": "isEmpty(stateComparison)"
+},
+{
+"sourceState": "S1",
+"targetState": "S_Fail",
+"dataCondition": "isEmpty(differenceSet)"
+},
+{
+"sourceState": "S2",
+"targetState": "S_Fail",
+"dataCondition": "isEmpty(selectedOperator)"
+},
+{
+"sourceState": "S3",
+"targetState": "S_Fail",
+"dataCondition": "!reducesDifference(newState)"
+}
+]
+}
+},
+{
+"name": "CompareStatesMechanism",
+"description": "Examine the current state and goal state and produce a comparison.",
+"inputParameters": ["currentState: state", "goalState: state"],
+"outputParameters": ["stateComparison: comparison"]
+},
+{
+"name": "FindDifferencesMechanism",
+"description": "Identify differences between the compared states.",
+"inputParameters": ["stateComparison: comparison"],
+"outputParameters": ["differenceSet: differenceSet"]
+},
+{
+"name": "SelectOperatorMechanism",
+"description": "Select the operator that most reduces the identified differences.",
+"inputParameters": ["differenceSet: differenceSet", "operatorSet: operatorSet"],
+"outputParameters": ["selectedOperator: operator"]
+},
+{
+"name": "ApplyOperatorMechanism",
+"description": "Apply the selected operator and produce a new state.",
+"inputParameters": ["selectedOperator: operator", "currentState: state"],
+"outputParameters": ["newState: state"]
+}
+]
+}
