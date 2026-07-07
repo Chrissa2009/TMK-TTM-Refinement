@@ -1,0 +1,181 @@
+{
+  "model": "Task",
+  "tasks": [
+    {
+      "name": "SelectActionUsingProductionSystem",
+      "description": "Map percept history and goals into an action using production rules and learning when necessary.",
+      "inputParameters": [
+        "initialConfiguration: configuration",
+        "knowledgeBase: knowledgeBase"
+      ],
+      "outputParameters": [
+        "finalConfiguration: configuration"
+      ],
+      "given": "validConfiguration(initialConfiguration)",
+      "makes": "goodActionSelection(finalConfiguration)",
+      "means": [
+        {
+          "mechanismReference": "ProductionSystemSolution",
+          "actualArguments": [
+            "initialConfiguration",
+            "knowledgeBase",
+            "finalConfiguration"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "RepresentPerceptsAndGoals",
+      "description": "Represent percepts and goals as feature-value structures in working memory.",
+      "inputParameters": [
+        "initialConfiguration: configuration"
+      ],
+      "outputParameters": [
+        "workingMemory: workingMemory"
+      ],
+      "means": [
+        {
+          "mechanismReference": "RepresentPerceptsMechanism",
+          "actualArguments": [
+            "initialConfiguration",
+            "workingMemory"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "MatchProductionRules",
+      "description": "Match working memory contents against antecedents of production rules stored in procedural memory.",
+      "inputParameters": [
+        "workingMemory: workingMemory"
+      ],
+      "outputParameters": [
+        "activatedRules: ruleSet"
+      ],
+      "means": [
+        {
+          "mechanismReference": "RuleMatchingMechanism",
+          "actualArguments": [
+            "workingMemory",
+            "activatedRules"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "SelectOperator",
+      "description": "Select an operator corresponding to the consequences of activated production rules.",
+      "inputParameters": [
+        "activatedRules: ruleSet"
+      ],
+      "outputParameters": [
+        "selectedOperator: operator"
+      ],
+      "means": [
+        {
+          "mechanismReference": "OperatorSelectionMechanism",
+          "actualArguments": [
+            "activatedRules",
+            "selectedOperator"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "FireActivatedRules",
+      "description": "Fire activated production rules so their consequents can suggest operators or add new contents to working memory.",
+      "inputParameters": [
+        "activatedRules: ruleSet"
+      ],
+      "outputParameters": [
+        "firedConsequents: consequentSet"
+      ],
+      "means": [
+        {
+          "mechanismReference": "RuleFiringMechanism",
+          "actualArguments": [
+            "activatedRules",
+            "firedConsequents"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "UpdateWorkingMemory",
+      "description": "Update working memory with consequents produced by fired production rules.",
+      "inputParameters": [
+        "workingMemory: workingMemory",
+        "firedConsequents: consequentSet"
+      ],
+      "outputParameters": [
+        "updatedWorkingMemory: workingMemory"
+      ],
+      "means": [
+        {
+          "mechanismReference": "WorkingMemoryUpdateMechanism",
+          "actualArguments": [
+            "workingMemory",
+            "firedConsequents",
+            "updatedWorkingMemory"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "SendActionToMotorSystem",
+      "description": "Send the selected operator or action to the motor system for execution.",
+      "inputParameters": [
+        "selectedOperator: operator"
+      ],
+      "outputParameters": [
+        "finalConfiguration: configuration"
+      ],
+      "means": [
+        {
+          "mechanismReference": "MotorActionMechanism",
+          "actualArguments": [
+            "selectedOperator",
+            "finalConfiguration"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ResolveImpasseByChunking",
+      "description": "Learn a new production rule using episodic memory when multiple operators are suggested or insufficient knowledge exists.",
+      "inputParameters": [
+        "workingMemory: workingMemory",
+        "activatedRules: ruleSet",
+        "episodicKnowledge: episodicKnowledge"
+      ],
+      "outputParameters": [
+        "newRule: productionRule"
+      ],
+      "means": [
+        {
+          "mechanismReference": "ChunkingMechanism",
+          "actualArguments": [
+            "workingMemory",
+            "activatedRules",
+            "episodicKnowledge",
+            "newRule"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "FailureGoal",
+      "description": "Represents unsuccessful action selection.",
+      "inputParameters": [],
+      "outputParameters": [],
+      "means": []
+    },
+    {
+      "name": "Complete",
+      "description": "Represents successful completion of action selection.",
+      "inputParameters": [],
+      "outputParameters": [],
+      "means": []
+    }
+  ]
+}

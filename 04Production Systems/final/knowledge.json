@@ -1,0 +1,284 @@
+{
+  "model": "Knowledge",
+  "concepts": [
+    {
+      "name": "configuration",
+      "description": "A feature-value representation of the current decision situation."
+    },
+    {
+      "name": "cognitiveArchitecture",
+      "description": "An architecture that combines fixed reasoning mechanisms with knowledge content to produce behavior."
+    },
+    {
+      "name": "SOAR",
+      "description": "A production-system cognitive architecture with working memory, long-term memory, decision making, impasse handling, and chunking."
+    },
+    {
+      "name": "workingMemory",
+      "description": "Short-term, rapidly changing memory that stores current percepts, goals, and rule consequents."
+    },
+    {
+      "name": "longTermMemory",
+      "description": "Relatively stable memory containing procedural, semantic, and episodic knowledge."
+    },
+    {
+      "name": "knowledgeBase",
+      "description": "The available knowledge used by the production system, including long-term memory and production rules."
+    },
+    {
+      "name": "knowledgeContent",
+      "description": "The domain-specific content placed inside a cognitive architecture to produce behavior."
+    },
+    {
+      "name": "productionRule",
+      "description": "An if-then rule stored as procedural knowledge in a production system."
+    },
+    {
+      "name": "antecedent",
+      "description": "The if-part of a production rule that is matched against working memory."
+    },
+    {
+      "name": "consequent",
+      "description": "The then-part of a production rule that updates working memory, suggests an operator, or sends an action."
+    },
+    {
+      "name": "consequentSet",
+      "description": "A collection of consequents produced by fired production rules."
+    },
+    {
+      "name": "ruleSet",
+      "description": "A collection of production rules."
+    },
+    {
+      "name": "operator",
+      "description": "A candidate action or internal operation suggested by production rules."
+    },
+    {
+      "name": "suggestedOperatorSet",
+      "description": "The set of operators suggested by activated or fired production rules."
+    },
+    {
+      "name": "action",
+      "description": "An executable behavior selected by the production system."
+    },
+    {
+      "name": "motorSystem",
+      "description": "The component that receives selected actions for execution."
+    },
+    {
+      "name": "percept",
+      "description": "Information sensed from the environment and represented in working memory."
+    },
+    {
+      "name": "perceptHistory",
+      "description": "The history of percepts that a cognitive agent maps into actions."
+    },
+    {
+      "name": "goal",
+      "description": "A desired state or objective that guides action selection."
+    },
+    {
+      "name": "episodicKnowledge",
+      "description": "Knowledge of specific remembered events that can provide examples for chunking."
+    },
+    {
+      "name": "semanticKnowledge",
+      "description": "General conceptual knowledge and models of the world."
+    },
+    {
+      "name": "proceduralKnowledge",
+      "description": "How-to knowledge represented as production rules."
+    },
+    {
+      "name": "impasse",
+      "description": "A decision state in which insufficient knowledge or multiple suggested operators prevent action selection."
+    },
+    {
+      "name": "chunking",
+      "description": "A learning process that creates a new production rule from episodic knowledge to resolve an impasse."
+    },
+    {
+      "name": "episode",
+      "description": "A specific remembered event used as a source for chunking."
+    },
+    {
+      "name": "behavior",
+      "description": "The observable result produced by a cognitive architecture operating on knowledge content."
+    }
+  ],
+  "instances": [
+    {
+      "name": "initialConfiguration",
+      "concept": "configuration",
+      "values": {
+        "inning": 7,
+        "outs": 2,
+        "runners": "secondAndThird",
+        "goal": "escapeInning"
+      }
+    },
+    {
+      "name": "finalConfiguration",
+      "concept": "configuration",
+      "values": {
+        "selectedAction": "intentionalWalk"
+      }
+    },
+    {
+      "name": "intentionalWalkOperator",
+      "concept": "operator"
+    },
+    {
+      "name": "throwCurveBallOperator",
+      "concept": "operator"
+    },
+    {
+      "name": "throwFastBallOperator",
+      "concept": "operator"
+    },
+    {
+      "name": "workingMemoryInstance",
+      "concept": "workingMemory"
+    },
+    {
+      "name": "soarArchitecture",
+      "concept": "SOAR"
+    }
+  ],
+  "relations": [
+    {
+      "name": "contains",
+      "domain": "workingMemory",
+      "range": "percept"
+    },
+    {
+      "name": "containsGoal",
+      "domain": "workingMemory",
+      "range": "goal"
+    },
+    {
+      "name": "stores",
+      "domain": "longTermMemory",
+      "range": "productionRule"
+    },
+    {
+      "name": "containsProceduralKnowledge",
+      "domain": "longTermMemory",
+      "range": "proceduralKnowledge"
+    },
+    {
+      "name": "containsSemanticKnowledge",
+      "domain": "longTermMemory",
+      "range": "semanticKnowledge"
+    },
+    {
+      "name": "containsEpisodicKnowledge",
+      "domain": "longTermMemory",
+      "range": "episodicKnowledge"
+    },
+    {
+      "name": "representsAsRule",
+      "domain": "proceduralKnowledge",
+      "range": "productionRule"
+    },
+    {
+      "name": "generalizesAs",
+      "domain": "semanticKnowledge",
+      "range": "knowledgeContent"
+    },
+    {
+      "name": "records",
+      "domain": "episodicKnowledge",
+      "range": "episode"
+    },
+    {
+      "name": "hasAntecedent",
+      "domain": "productionRule",
+      "range": "antecedent"
+    },
+    {
+      "name": "hasConsequent",
+      "domain": "productionRule",
+      "range": "consequent"
+    },
+    {
+      "name": "matches",
+      "domain": "workingMemory",
+      "range": "antecedent"
+    },
+    {
+      "name": "fires",
+      "domain": "productionRule",
+      "range": "consequent"
+    },
+    {
+      "name": "updates",
+      "domain": "consequent",
+      "range": "workingMemory"
+    },
+    {
+      "name": "suggests",
+      "domain": "productionRule",
+      "range": "operator"
+    },
+    {
+      "name": "mapsTo",
+      "domain": "perceptHistory",
+      "range": "action"
+    },
+    {
+      "name": "sendsTo",
+      "domain": "operator",
+      "range": "motorSystem"
+    },
+    {
+      "name": "learns",
+      "domain": "episodicKnowledge",
+      "range": "productionRule"
+    },
+    {
+      "name": "usesEpisode",
+      "domain": "chunking",
+      "range": "episode"
+    },
+    {
+      "name": "resolves",
+      "domain": "chunking",
+      "range": "impasse"
+    },
+    {
+      "name": "producesBehavior",
+      "domain": "cognitiveArchitecture",
+      "range": "behavior"
+    },
+    {
+      "name": "providesContent",
+      "domain": "knowledgeContent",
+      "range": "cognitiveArchitecture"
+    },
+    {
+      "name": "realizesAction",
+      "domain": "operator",
+      "range": "action"
+    }
+  ],
+  "triples": [
+    {
+      "instance1": "workingMemoryInstance",
+      "relation": "contains",
+      "instance2": "initialConfiguration"
+    }
+  ],
+  "assertions": [
+    {
+      "name": "goodActionSelection",
+      "description": "A valid operator has been selected from production rules or learned through chunking.",
+      "equivalentTo": "SelectActionUsingProductionSystem"
+    },
+    {
+      "name": "architectureContentBehavior",
+      "description": "A cognitive architecture plus knowledge content produces behavior.",
+      "equivalentTo": "cognitiveArchitecture + knowledgeContent = behavior"
+    }
+  ]
+}

@@ -1,0 +1,121 @@
+{
+"model": "Task",
+"tasks": [
+{
+"name": "SolveProblemUsingMeansEndsAnalysis",
+"description": "Solve a well-formed problem by iteratively reducing differences between the current state and the goal state.",
+"inputParameters": [
+"initialConfiguration: configuration",
+"goalConfiguration: configuration",
+"operatorSet: operatorSet"
+],
+"outputParameters": [
+"finalConfiguration: configuration"
+],
+"given": "valid(initialConfiguration) && valid(goalConfiguration)",
+"makes": "goodSolution(finalConfiguration)",
+"means": [
+{
+"mechanismReference": "MeansEndsAnalysisSolution",
+"actualArguments": [
+"initialConfiguration",
+"goalConfiguration",
+"operatorSet"
+]
+}
+]
+},
+{
+"name": "CompareStates",
+"description": "Compare the current state and the goal state.",
+"inputParameters": [
+"currentState: state",
+"goalState: state"
+],
+"outputParameters": [
+"stateComparison: comparison"
+],
+"means": [
+{
+"mechanismReference": "CompareStatesMechanism",
+"actualArguments": [
+"currentState",
+"goalState"
+]
+}
+]
+},
+{
+"name": "FindDifferences",
+"description": "Determine the differences between the current state and the goal state.",
+"inputParameters": [
+"stateComparison: comparison"
+],
+"outputParameters": [
+"differenceSet: differenceSet"
+],
+"means": [
+{
+"mechanismReference": "FindDifferencesMechanism",
+"actualArguments": [
+"stateComparison"
+]
+}
+]
+},
+{
+"name": "SelectDifferenceReducingOperator",
+"description": "Choose an operator that minimizes the difference between the current state and the goal state.",
+"inputParameters": [
+"differenceSet: differenceSet",
+"operatorSet: operatorSet"
+],
+"outputParameters": [
+"selectedOperator: operator"
+],
+"means": [
+{
+"mechanismReference": "SelectOperatorMechanism",
+"actualArguments": [
+"differenceSet",
+"operatorSet"
+]
+}
+]
+},
+{
+"name": "ApplyOperator",
+"description": "Apply the selected operator to produce a new state.",
+"inputParameters": [
+"selectedOperator: operator",
+"currentState: state"
+],
+"outputParameters": [
+"newState: state"
+],
+"means": [
+{
+"mechanismReference": "ApplyOperatorMechanism",
+"actualArguments": [
+"selectedOperator",
+"currentState"
+]
+}
+]
+},
+{
+"name": "FailureGoal",
+"description": "Represents failure to reduce differences or reach the goal state.",
+"inputParameters": [],
+"outputParameters": [],
+"means": []
+},
+{
+"name": "Complete",
+"description": "Represents successful achievement of the goal state.",
+"inputParameters": [],
+"outputParameters": [],
+"means": []
+}
+]
+}

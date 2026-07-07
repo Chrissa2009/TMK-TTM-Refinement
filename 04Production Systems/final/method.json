@@ -1,0 +1,287 @@
+{
+  "model": "Method",
+  "methods": [
+    {
+      "name": "ProductionSystemSolution",
+      "description": "Top-level production system for mapping percepts and goals into actions.",
+      "inputParameters": [
+        "initialConfiguration: configuration",
+        "knowledgeBase: knowledgeBase"
+      ],
+      "outputParameters": [
+        "finalConfiguration: configuration"
+      ],
+      "organizer": {
+        "startState": "PS_S0",
+        "successState": "PS_Done",
+        "failureState": "PS_Fail",
+        "states": [
+          {
+            "name": "PS_S0",
+            "goalInvocation": {
+              "goalReference": "RepresentPerceptsAndGoals",
+              "type": "task",
+              "actualArguments": [
+                "initialConfiguration"
+              ]
+            }
+          },
+          {
+            "name": "PS_S1",
+            "goalInvocation": {
+              "goalReference": "MatchProductionRules",
+              "type": "task",
+              "actualArguments": [
+                "workingMemory"
+              ]
+            }
+          },
+          {
+            "name": "PS_S2",
+            "goalInvocation": {
+              "goalReference": "FireActivatedRules",
+              "type": "task",
+              "actualArguments": [
+                "activatedRules"
+              ]
+            }
+          },
+          {
+            "name": "PS_S3",
+            "goalInvocation": {
+              "goalReference": "UpdateWorkingMemory",
+              "type": "task",
+              "actualArguments": [
+                "workingMemory",
+                "firedConsequents"
+              ]
+            }
+          },
+          {
+            "name": "PS_S4",
+            "goalInvocation": {
+              "goalReference": "SelectOperator",
+              "type": "task",
+              "actualArguments": [
+                "activatedRules"
+              ]
+            }
+          },
+          {
+            "name": "PS_S5",
+            "goalInvocation": {
+              "goalReference": "SendActionToMotorSystem",
+              "type": "task",
+              "actualArguments": [
+                "selectedOperator"
+              ]
+            }
+          },
+          {
+            "name": "PS_Done",
+            "goalInvocation": {
+              "goalReference": "Complete",
+              "type": "task",
+              "actualArguments": []
+            }
+          },
+          {
+            "name": "PS_Chunk",
+            "goalInvocation": {
+              "goalReference": "ResolveImpasseByChunking",
+              "type": "task",
+              "actualArguments": [
+                "workingMemory",
+                "activatedRules",
+                "episodicKnowledge"
+              ]
+            }
+          },
+          {
+            "name": "PS_Fail",
+            "goalInvocation": {
+              "goalReference": "FailureGoal",
+              "type": "task",
+              "actualArguments": []
+            }
+          }
+        ],
+        "transitions": [
+          {
+            "sourceState": "PS_S0",
+            "targetState": "PS_S1",
+            "dataCondition": "!isEmpty(workingMemory)"
+          },
+          {
+            "sourceState": "PS_S1",
+            "targetState": "PS_S2",
+            "dataCondition": "!isEmpty(activatedRules)"
+          },
+          {
+            "sourceState": "PS_S2",
+            "targetState": "PS_S3",
+            "dataCondition": "!isEmpty(firedConsequents)"
+          },
+          {
+            "sourceState": "PS_S3",
+            "targetState": "PS_S1",
+            "dataCondition": "workingMemoryChanged(updatedWorkingMemory) && !readyToSelectOperator(updatedWorkingMemory)",
+            "dataEffect": "workingMemory = updatedWorkingMemory"
+          },
+          {
+            "sourceState": "PS_S3",
+            "targetState": "PS_S4",
+            "dataCondition": "readyToSelectOperator(updatedWorkingMemory)",
+            "dataEffect": "workingMemory = updatedWorkingMemory"
+          },
+          {
+            "sourceState": "PS_S4",
+            "targetState": "PS_S5",
+            "dataCondition": "singleSelectedOperator(selectedOperator)"
+          },
+          {
+            "sourceState": "PS_S5",
+            "targetState": "PS_Done",
+            "dataCondition": "goodActionSelection(finalConfiguration)"
+          },
+          {
+            "sourceState": "PS_S1",
+            "targetState": "PS_Chunk",
+            "dataCondition": "isEmpty(activatedRules)"
+          },
+          {
+            "sourceState": "PS_S2",
+            "targetState": "PS_Chunk",
+            "dataCondition": "isEmpty(firedConsequents)"
+          },
+          {
+            "sourceState": "PS_S4",
+            "targetState": "PS_Chunk",
+            "dataCondition": "impasse(workingMemory) || multipleSuggestedOperators(activatedRules) || isEmpty(selectedOperator)"
+          },
+          {
+            "sourceState": "PS_Chunk",
+            "targetState": "PS_S1",
+            "dataCondition": "!isEmpty(newRule)",
+            "dataEffect": "proceduralKnowledge += newRule"
+          },
+          {
+            "sourceState": "PS_Chunk",
+            "targetState": "PS_Fail",
+            "dataCondition": "isEmpty(newRule)"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RepresentPerceptsMechanism",
+      "description": "Store percepts and goals in working memory as feature-value structures.",
+      "inputParameters": [
+        "initialConfiguration: configuration"
+      ],
+      "outputParameters": [
+        "workingMemory: workingMemory"
+      ],
+      "requires": "validConfiguration(initialConfiguration)",
+      "provides": "!isEmpty(workingMemory)"
+    },
+    {
+      "name": "RuleMatchingMechanism",
+      "description": "Match working memory contents against antecedents of procedural production rules.",
+      "inputParameters": [
+        "workingMemory: workingMemory"
+      ],
+      "outputParameters": [
+        "activatedRules: ruleSet"
+      ],
+      "requires": "!isEmpty(workingMemory)",
+      "provides": "!isEmpty(activatedRules)"
+    },
+    {
+      "name": "OperatorSelectionMechanism",
+      "description": "Select an operator from consequences of activated rules.",
+      "inputParameters": [
+        "activatedRules: ruleSet"
+      ],
+      "outputParameters": [
+        "selectedOperator: operator"
+      ],
+      "requires": "!isEmpty(activatedRules)",
+      "provides": "!isEmpty(selectedOperator)"
+    },
+    {
+      "name": "RuleFiringMechanism",
+      "description": "Fire activated rules and collect their consequents.",
+      "inputParameters": [
+        "activatedRules: ruleSet"
+      ],
+      "outputParameters": [
+        "firedConsequents: consequentSet"
+      ],
+      "requires": "!isEmpty(activatedRules)",
+      "provides": "!isEmpty(firedConsequents)"
+    },
+    {
+      "name": "WorkingMemoryUpdateMechanism",
+      "description": "Write rule consequents into working memory so additional rules may become activated.",
+      "inputParameters": [
+        "workingMemory: workingMemory",
+        "firedConsequents: consequentSet"
+      ],
+      "outputParameters": [
+        "updatedWorkingMemory: workingMemory"
+      ],
+      "requires": "!isEmpty(firedConsequents)",
+      "provides": "!isEmpty(updatedWorkingMemory)"
+    },
+    {
+      "name": "MotorActionMechanism",
+      "description": "Send the selected operator to the motor system and produce the final action-selection configuration.",
+      "inputParameters": [
+        "selectedOperator: operator"
+      ],
+      "outputParameters": [
+        "finalConfiguration: configuration"
+      ],
+      "requires": "singleSelectedOperator(selectedOperator)",
+      "provides": "goodActionSelection(finalConfiguration)"
+    },
+    {
+      "name": "ChunkingMechanism",
+      "description": "Create a new production rule using episodic memory to resolve an impasse.",
+      "inputParameters": [
+        "workingMemory: workingMemory",
+        "activatedRules: ruleSet",
+        "episodicKnowledge: episodicKnowledge"
+      ],
+      "outputParameters": [
+        "newRule: productionRule"
+      ],
+      "requires": "impasse(workingMemory) || multipleSuggestedOperators(activatedRules) || isEmpty(activatedRules)",
+      "provides": "!isEmpty(newRule)"
+    },
+    {
+      "name": "ProductionAssertions",
+      "description": "Assertions used in the production system model.",
+      "inputParameters": [],
+      "outputParameters": [],
+      "assertions": [
+        {
+          "name": "impasse",
+          "description": "Decision state in which multiple operators are suggested or insufficient knowledge exists.",
+          "equivalentTo": "ResolveImpasseByChunking"
+        },
+        {
+          "name": "singleSelectedOperator",
+          "description": "Exactly one operator is available for action execution.",
+          "equivalentTo": "count(selectedOperator) = 1"
+        },
+        {
+          "name": "multipleSuggestedOperators",
+          "description": "More than one operator is suggested, requiring an impasse-resolution strategy.",
+          "equivalentTo": "count(suggestedOperators) > 1"
+        }
+      ]
+    }
+  ]
+}
