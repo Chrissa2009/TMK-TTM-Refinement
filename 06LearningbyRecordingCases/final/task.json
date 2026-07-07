@@ -1,0 +1,182 @@
+{
+  "model": "Task",
+  "tasks": [
+    {
+      "name": "SolveByRecordingCases",
+      "description": "Solve a new problem by retrieving a similar recorded case, adapting its solution when needed, and evaluating whether the adapted solution fits.",
+      "inputParameters": [
+        "initialConfiguration: configuration",
+        "caseMemory: caseMemory"
+      ],
+      "outputParameters": [
+        "finalConfiguration: configuration"
+      ],
+      "given": "initialConfiguration != null && caseMemory != null",
+      "makes": "goodCaseRetrieval(finalConfiguration) && acceptableAdaptation(finalConfiguration)",
+      "means": [
+        {
+          "mechanismReference": "RecordingCasesSolution",
+          "actualArguments": [
+            "initialConfiguration",
+            "caseMemory",
+            "finalConfiguration"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "RepresentProblem",
+      "description": "Represent the new problem and recorded cases in a feature space.",
+      "inputParameters": [
+        "initialConfiguration: configuration"
+      ],
+      "outputParameters": [
+        "problemRepresentation: problemRepresentation"
+      ],
+      "given": "initialConfiguration != null",
+      "makes": "!isEmpty(problemRepresentation)",
+      "means": [
+        {
+          "mechanismReference": "RepresentProblemMechanism",
+          "actualArguments": [
+            "initialConfiguration",
+            "problemRepresentation"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ComputeSimilarity",
+      "description": "Compute similarity or distance between the new problem and previously recorded cases.",
+      "inputParameters": [
+        "problemRepresentation: problemRepresentation",
+        "caseMemory: caseMemory"
+      ],
+      "outputParameters": [
+        "distanceSet: distanceSet"
+      ],
+      "given": "!isEmpty(problemRepresentation)",
+      "makes": "!isEmpty(distanceSet)",
+      "means": [
+        {
+          "mechanismReference": "ComputeSimilarityMechanism",
+          "actualArguments": [
+            "problemRepresentation",
+            "caseMemory",
+            "distanceSet"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "RetrieveNearestCase",
+      "description": "Retrieve the most similar recorded case using nearest neighbor or k-nearest neighbor methods.",
+      "inputParameters": [
+        "distanceSet: distanceSet"
+      ],
+      "outputParameters": [
+        "retrievedCase: recordedCase"
+      ],
+      "given": "!isEmpty(distanceSet)",
+      "makes": "!isEmpty(retrievedCase)",
+      "means": [
+        {
+          "mechanismReference": "RetrieveNearestCaseMechanism",
+          "actualArguments": [
+            "distanceSet",
+            "retrievedCase"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ApplyCaseSolution",
+      "description": "Transfer the solution associated with the retrieved case as a candidate solution for the new problem.",
+      "inputParameters": [
+        "retrievedCase: recordedCase",
+        "initialConfiguration: configuration"
+      ],
+      "outputParameters": [
+        "candidateConfiguration: configuration"
+      ],
+      "given": "!isEmpty(retrievedCase)",
+      "makes": "transferredCaseSolution(candidateConfiguration)",
+      "means": [
+        {
+          "mechanismReference": "ApplyCaseSolutionMechanism",
+          "actualArguments": [
+            "retrievedCase",
+            "initialConfiguration",
+            "candidateConfiguration"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "AdaptCaseSolution",
+      "description": "Modify or confirm the transferred case solution so it better fits the current problem.",
+      "inputParameters": [
+        "retrievedCase: recordedCase",
+        "candidateConfiguration: configuration",
+        "initialConfiguration: configuration"
+      ],
+      "outputParameters": [
+        "adaptedConfiguration: configuration"
+      ],
+      "given": "transferredCaseSolution(candidateConfiguration)",
+      "makes": "adaptedCaseSolution(adaptedConfiguration)",
+      "means": [
+        {
+          "mechanismReference": "AdaptCaseSolutionMechanism",
+          "actualArguments": [
+            "retrievedCase",
+            "candidateConfiguration",
+            "initialConfiguration",
+            "adaptedConfiguration"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "EvaluateAdaptation",
+      "description": "Evaluate whether the adapted case solution should be accepted for the new problem.",
+      "inputParameters": [
+        "adaptedConfiguration: configuration",
+        "initialConfiguration: configuration"
+      ],
+      "outputParameters": [
+        "finalConfiguration: configuration"
+      ],
+      "given": "adaptedCaseSolution(adaptedConfiguration)",
+      "makes": "acceptableAdaptation(finalConfiguration)",
+      "means": [
+        {
+          "mechanismReference": "EvaluateAdaptationMechanism",
+          "actualArguments": [
+            "adaptedConfiguration",
+            "initialConfiguration",
+            "finalConfiguration"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "FailureGoal",
+      "description": "Represents unsuccessful retrieval, adaptation, or application of a recorded case.",
+      "inputParameters": [],
+      "outputParameters": [],
+      "given": "",
+      "makes": "",
+      "means": []
+    },
+    {
+      "name": "Complete",
+      "description": "Represents successful completion of learning by recording cases.",
+      "inputParameters": [],
+      "outputParameters": [],
+      "given": "",
+      "makes": "",
+      "means": []
+    }
+  ]
+}

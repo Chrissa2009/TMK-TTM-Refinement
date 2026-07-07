@@ -1,0 +1,151 @@
+{
+  "model": "Knowledge",
+  "concepts": [
+    {
+      "name": "recordedCase",
+      "description": "An encapsulation of a past experience."
+    },
+    {
+      "name": "newProblem",
+      "description": "A problem requiring a solution based on prior cases."
+    },
+    {
+      "name": "caseMemory",
+      "description": "A collection of previously recorded cases."
+    },
+    {
+      "name": "problemRepresentation",
+      "description": "Feature-space representation of a problem."
+    },
+    {
+      "name": "distanceSet",
+      "description": "Distances between the new problem and stored cases."
+    },
+    {
+      "name": "configuration",
+      "description": "State of a problem before and after case retrieval."
+    },
+    {
+      "name": "caseSolution",
+      "description": "The solution associated with a recorded case."
+    },
+    {
+      "name": "candidateSolution",
+      "description": "A transferred case solution before it has been adapted or accepted."
+    },
+    {
+      "name": "adaptedSolution",
+      "description": "A case solution modified or confirmed for the current problem."
+    },
+    {
+      "name": "adaptationEvaluation",
+      "description": "Assessment of whether an adapted solution fits the new problem."
+    }
+  ],
+  "instances": [
+    {
+      "name": "blackBlockCase",
+      "concept": "recordedCase"
+    },
+    {
+      "name": "blueBlockCase",
+      "concept": "recordedCase"
+    },
+    {
+      "name": "navigationRouteD",
+      "concept": "recordedCase"
+    },
+    {
+      "name": "initialConfiguration",
+      "concept": "configuration"
+    },
+    {
+      "name": "finalConfiguration",
+      "concept": "configuration"
+    },
+    {
+      "name": "candidateConfiguration",
+      "concept": "configuration"
+    },
+    {
+      "name": "adaptedConfiguration",
+      "concept": "configuration"
+    }
+  ],
+  "relations": [
+    {
+      "name": "storedIn",
+      "domain": "recordedCase",
+      "range": "caseMemory"
+    },
+    {
+      "name": "resembles",
+      "domain": "newProblem",
+      "range": "recordedCase"
+    },
+    {
+      "name": "retrieves",
+      "domain": "caseMemory",
+      "range": "recordedCase"
+    },
+    {
+      "name": "appliesSolutionOf",
+      "domain": "newProblem",
+      "range": "recordedCase"
+    },
+    {
+      "name": "hasSolution",
+      "domain": "recordedCase",
+      "range": "caseSolution"
+    },
+    {
+      "name": "transfersSolutionTo",
+      "domain": "recordedCase",
+      "range": "newProblem"
+    },
+    {
+      "name": "adaptsSolutionFor",
+      "domain": "caseSolution",
+      "range": "newProblem"
+    },
+    {
+      "name": "evaluatesFitFor",
+      "domain": "adaptedSolution",
+      "range": "newProblem"
+    }
+  ],
+  "triples": [
+    {
+      "instance1": "blackBlockCase",
+      "relation": "storedIn",
+      "instance2": "caseMemory"
+    },
+    {
+      "instance1": "navigationRouteD",
+      "relation": "storedIn",
+      "instance2": "caseMemory"
+    }
+  ],
+  "assertions": [
+    {
+      "name": "goodCaseRetrieval",
+      "description": "The solution considered for the new problem comes from a retrieved similar recorded case.",
+      "equivalentTo": "retrieves(caseMemory, recordedCase) && transfersSolutionTo(recordedCase, newProblem)"
+    },
+    {
+      "name": "transferredCaseSolution",
+      "description": "A retrieved case solution has been transferred as a candidate for the new problem.",
+      "equivalentTo": "goodCaseRetrieval(candidateConfiguration)"
+    },
+    {
+      "name": "adaptedCaseSolution",
+      "description": "The transferred case solution has been modified or confirmed for the current problem.",
+      "equivalentTo": "transferredCaseSolution(candidateConfiguration) && adaptsSolutionFor(caseSolution, newProblem)"
+    },
+    {
+      "name": "acceptableAdaptation",
+      "description": "The adapted case solution is suitable enough to accept for the new problem.",
+      "equivalentTo": "adaptedCaseSolution(adaptedConfiguration) && evaluatesFitFor(adaptedSolution, newProblem)"
+    }
+  ]
+}

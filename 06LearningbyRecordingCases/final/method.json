@@ -1,0 +1,259 @@
+{
+  "model": "Method",
+  "methods": [
+    {
+      "name": "RecordingCasesSolution",
+      "description": "FSM for solving a new problem by recording and retrieving similar cases.",
+      "inputParameters": [
+        "initialConfiguration: configuration",
+        "caseMemory: caseMemory"
+      ],
+      "outputParameters": [
+        "finalConfiguration: configuration"
+      ],
+      "organizer": {
+        "startState": "S0",
+        "successState": "S6_Complete",
+        "failureState": "S_Fail",
+        "states": [
+          {
+            "name": "S0",
+            "goalInvocation": {
+              "goalReference": "RepresentProblem",
+              "type": "task",
+              "actualArguments": [
+                "initialConfiguration"
+              ]
+            }
+          },
+          {
+            "name": "S1",
+            "goalInvocation": {
+              "goalReference": "ComputeSimilarity",
+              "type": "task",
+              "actualArguments": [
+                "problemRepresentation",
+                "caseMemory"
+              ]
+            }
+          },
+          {
+            "name": "S2",
+            "goalInvocation": {
+              "goalReference": "RetrieveNearestCase",
+              "type": "task",
+              "actualArguments": [
+                "distanceSet"
+              ]
+            }
+          },
+          {
+            "name": "S3",
+            "goalInvocation": {
+              "goalReference": "ApplyCaseSolution",
+              "type": "task",
+              "actualArguments": [
+                "retrievedCase",
+                "initialConfiguration"
+              ]
+            }
+          },
+          {
+            "name": "S4",
+            "goalInvocation": {
+              "goalReference": "AdaptCaseSolution",
+              "type": "task",
+              "actualArguments": [
+                "retrievedCase",
+                "candidateConfiguration",
+                "initialConfiguration"
+              ]
+            }
+          },
+          {
+            "name": "S5",
+            "goalInvocation": {
+              "goalReference": "EvaluateAdaptation",
+              "type": "task",
+              "actualArguments": [
+                "adaptedConfiguration",
+                "initialConfiguration"
+              ]
+            }
+          },
+          {
+            "name": "S6_Complete",
+            "goalInvocation": {
+              "goalReference": "Complete",
+              "type": "task",
+              "actualArguments": []
+            }
+          },
+          {
+            "name": "S_Fail",
+            "goalInvocation": {
+              "goalReference": "FailureGoal",
+              "type": "task",
+              "actualArguments": []
+            }
+          }
+        ],
+        "transitions": [
+          {
+            "sourceState": "S0",
+            "targetState": "S1",
+            "dataCondition": "!isEmpty(problemRepresentation)"
+          },
+          {
+            "sourceState": "S1",
+            "targetState": "S2",
+            "dataCondition": "!isEmpty(distanceSet)"
+          },
+          {
+            "sourceState": "S2",
+            "targetState": "S3",
+            "dataCondition": "!isEmpty(retrievedCase)"
+          },
+          {
+            "sourceState": "S3",
+            "targetState": "S4",
+            "dataCondition": "transferredCaseSolution(candidateConfiguration)"
+          },
+          {
+            "sourceState": "S4",
+            "targetState": "S5",
+            "dataCondition": "adaptedCaseSolution(adaptedConfiguration)"
+          },
+          {
+            "sourceState": "S5",
+            "targetState": "S6_Complete",
+            "dataCondition": "acceptableAdaptation(finalConfiguration)"
+          },
+          {
+            "sourceState": "S0",
+            "targetState": "S_Fail",
+            "dataCondition": "isEmpty(problemRepresentation)"
+          },
+          {
+            "sourceState": "S1",
+            "targetState": "S_Fail",
+            "dataCondition": "isEmpty(distanceSet)"
+          },
+          {
+            "sourceState": "S2",
+            "targetState": "S_Fail",
+            "dataCondition": "isEmpty(retrievedCase)"
+          },
+          {
+            "sourceState": "S3",
+            "targetState": "S_Fail",
+            "dataCondition": "!transferredCaseSolution(candidateConfiguration)"
+          },
+          {
+            "sourceState": "S4",
+            "targetState": "S_Fail",
+            "dataCondition": "!adaptedCaseSolution(adaptedConfiguration)"
+          },
+          {
+            "sourceState": "S5",
+            "targetState": "S_Fail",
+            "dataCondition": "!acceptableAdaptation(finalConfiguration)"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RepresentProblemMechanism",
+      "description": "Represents a problem in a feature space such as width and height coordinates.",
+      "inputParameters": [
+        "initialConfiguration: configuration"
+      ],
+      "outputParameters": [
+        "problemRepresentation: problemRepresentation"
+      ]
+    },
+    {
+      "name": "ComputeSimilarityMechanism",
+      "description": "Computes distances between the new problem and recorded cases using Euclidean distance.",
+      "inputParameters": [
+        "problemRepresentation: problemRepresentation",
+        "caseMemory: caseMemory"
+      ],
+      "outputParameters": [
+        "distanceSet: distanceSet"
+      ]
+    },
+    {
+      "name": "RetrieveNearestCaseMechanism",
+      "description": "Retrieves the nearest case or k-nearest neighbors from memory.",
+      "inputParameters": [
+        "distanceSet: distanceSet"
+      ],
+      "outputParameters": [
+        "retrievedCase: recordedCase"
+      ]
+    },
+    {
+      "name": "ApplyCaseSolutionMechanism",
+      "description": "Transfers the solution associated with the retrieved case as a candidate solution for the current problem.",
+      "inputParameters": [
+        "retrievedCase: recordedCase",
+        "initialConfiguration: configuration"
+      ],
+      "outputParameters": [
+        "candidateConfiguration: configuration"
+      ]
+    },
+    {
+      "name": "AdaptCaseSolutionMechanism",
+      "description": "Adapts or confirms the transferred solution so that nearest-case retrieval is not treated as automatically sufficient.",
+      "inputParameters": [
+        "retrievedCase: recordedCase",
+        "candidateConfiguration: configuration",
+        "initialConfiguration: configuration"
+      ],
+      "outputParameters": [
+        "adaptedConfiguration: configuration"
+      ]
+    },
+    {
+      "name": "EvaluateAdaptationMechanism",
+      "description": "Checks whether the adapted case solution is suitable for the current problem before accepting it.",
+      "inputParameters": [
+        "adaptedConfiguration: configuration",
+        "initialConfiguration: configuration"
+      ],
+      "outputParameters": [
+        "finalConfiguration: configuration"
+      ]
+    },
+    {
+      "name": "Assertions",
+      "description": "Logical mappings used in learning by recording cases.",
+      "inputParameters": [],
+      "outputParameters": [],
+      "assertions": [
+        {
+          "name": "nearestNeighbor",
+          "description": "Returns the most similar case to a new problem.",
+          "equivalentTo": "RetrieveNearestCaseMechanism"
+        },
+        {
+          "name": "kNearestNeighbor",
+          "description": "Returns the nearest cases in a multidimensional feature space.",
+          "equivalentTo": "RetrieveNearestCaseMechanism"
+        },
+        {
+          "name": "caseAdaptation",
+          "description": "Adapts a retrieved case solution before accepting it for a new problem.",
+          "equivalentTo": "AdaptCaseSolutionMechanism"
+        },
+        {
+          "name": "adaptationEvaluation",
+          "description": "Evaluates whether a retrieved and adapted case solution should be accepted.",
+          "equivalentTo": "EvaluateAdaptationMechanism"
+        }
+      ]
+    }
+  ]
+}
