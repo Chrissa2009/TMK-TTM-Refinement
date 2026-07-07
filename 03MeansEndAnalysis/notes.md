@@ -47,3 +47,17 @@ Refined the Method model so that Means-Ends Analysis continues iterating until t
 
 ### Rationale
 The lesson describes Means-Ends Analysis as a repeated cycle: compare the current state to the goal state, select an operator that reduces the difference, apply it, and continue until the goal is reached. A state that reduces the difference is progress, not necessarily success. This refinement keeps the existing `GoalState`, `finalConfiguration`, and `goodSolution` knowledge elements intact while making the Method model use them correctly.
+
+## Refinement 5: Made Difference Reduction Explicit
+
+### Summary
+Added an explicit Knowledge relation showing that operators are selected because they reduce differences between the current state and the goal state.
+
+### Changes
+
+#### reducesDifference
+- Added the `reducesDifference` relation from `operator` to `difference`.
+- This captures the lesson's explanation that Means-Ends Analysis chooses operators that help reduce the difference between the current state and the goal state.
+
+### Rationale
+The previous model represented difference reduction procedurally through `SelectDifferenceReducingOperator` and the Method transition conditions, but the Knowledge model did not directly encode the relationship between operators and differences. Adding this relation makes the means-end link explicit: the operator is the means, and reducing the difference is the end.

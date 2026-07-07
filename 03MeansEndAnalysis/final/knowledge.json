@@ -80,6 +80,11 @@
 "range": "operator"
 },
 {
+"name": "reducesDifference",
+"domain": "operator",
+"range": "difference"
+},
+{
 "name": "transformsTo",
 "domain": "state",
 "range": "state"
