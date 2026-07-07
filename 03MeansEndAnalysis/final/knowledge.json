@@ -14,6 +14,10 @@
 "description": "A discrepancy between a current state and a goal state."
 },
 {
+"name": "heuristic",
+"description": "A rule of thumb used to guide search from the initial state toward the goal state by estimating which operator or state is most promising."
+},
+{
 "name": "operator",
 "description": "An action that transforms one state into another."
 },

@@ -61,3 +61,18 @@ Added an explicit Knowledge relation showing that operators are selected because
 
 ### Rationale
 The previous model represented difference reduction procedurally through `SelectDifferenceReducingOperator` and the Method transition conditions, but the Knowledge model did not directly encode the relationship between operators and differences. Adding this relation makes the means-end link explicit: the operator is the means, and reducing the difference is the end.
+
+## Refinement 6: Added Heuristic Concept
+
+### Summary
+Added an explicit `heuristic` concept to represent the rule of thumb used by Means-Ends Analysis to guide search from the initial state toward the goal state.
+
+### Changes
+
+#### heuristic
+- Added the `heuristic` concept.
+- Represents a rule of thumb for estimating which operator or state is most promising during search.
+- Included because the lesson states that Means-Ends Analysis uses a heuristic to guide the search from the initial state to the goal state.
+
+### Rationale
+The previous Knowledge model described `WeakMethod` as heuristic-like, but it did not define `heuristic` itself. Adding this concept makes the lesson's search-guidance mechanism explicit and separates the general category of weak methods from the specific guidance principle used during Means-Ends Analysis.
