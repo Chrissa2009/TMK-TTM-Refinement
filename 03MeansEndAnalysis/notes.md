@@ -76,3 +76,33 @@ Added an explicit `heuristic` concept to represent the rule of thumb used by Mea
 
 ### Rationale
 The previous Knowledge model described `WeakMethod` as heuristic-like, but it did not define `heuristic` itself. Adding this concept makes the lesson's search-guidance mechanism explicit and separates the general category of weak methods from the specific guidance principle used during Means-Ends Analysis.
+
+## Refinement 7: Added Problem-Solving Method Concepts
+
+### Summary
+Expanded the Knowledge model with additional concepts from the lesson's discussion of problem reduction, universal methods, weak methods, and strong methods.
+
+### Changes
+
+#### ProblemReduction
+- Added the `ProblemReduction` concept.
+- Represents decomposing a difficult problem into smaller subproblems or subgoals.
+- Included because the lesson uses problem reduction to help overcome obstacles encountered during Means-Ends Analysis.
+
+#### Subgoal
+- Added the `Subgoal` concept.
+- Represents a smaller goal produced by decomposing a larger goal.
+- Supports the lesson's explanation that problem reduction solves a larger problem by solving smaller pieces.
+
+#### UniversalMethod
+- Added the `UniversalMethod` concept.
+- Represents a general-purpose problem-solving method applicable across a broad class of problems.
+- Included because the lesson characterizes Means-Ends Analysis, Generate and Test, and Problem Reduction as universal methods.
+
+#### StrongMethod
+- Added the `StrongMethod` concept.
+- Represents a knowledge-intensive problem-solving method that uses substantial domain knowledge to solve problems efficiently.
+- Included to contrast with weak methods, which make little use of knowledge.
+
+### Rationale
+The prior Knowledge model represented `WeakMethod`, but it did not capture the broader method taxonomy from the lesson. Adding these concepts makes the model better reflect the lesson's distinction between universal weak methods and more knowledge-intensive strong methods, while also representing problem reduction and subgoals as important companions to Means-Ends Analysis.

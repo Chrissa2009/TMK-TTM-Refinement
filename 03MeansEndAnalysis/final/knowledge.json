@@ -30,8 +30,24 @@
 "description": "A representation of similarities and differences between states."
 },
 {
+"name": "ProblemReduction",
+"description": "A problem-solving method that decomposes a difficult problem into smaller subproblems or subgoals."
+},
+{
+"name": "Subgoal",
+"description": "A smaller goal produced by decomposing a larger goal during problem reduction."
+},
+{
+"name": "UniversalMethod",
+"description": "A general-purpose problem-solving method that can apply across a broad class of problems."
+},
+{
 "name": "WeakMethod",
 "description": "A heuristic or strategy that guides problem solving without guaranteeing an optimal or complete solution."
+},
+{
+"name": "StrongMethod",
+"description": "A knowledge-intensive problem-solving method that uses substantial domain knowledge to produce solutions efficiently."
 },
 {
 "name": "InitialState",
