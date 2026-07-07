@@ -197,3 +197,44 @@ Refined the model so impasses trigger chunking, and chunking can add a learned p
 
 ### Rationale
 The lesson treats chunking as the learning mechanism that is triggered by an impasse. The original model had chunking, but it treated the impasse path as a failure state rather than as a recoverable learning path. This refinement models chunking as part of the production-system cycle.
+
+## Refinement 8: Added State-Space Representation Concepts
+
+### Summary
+Expanded the Knowledge model to explicitly represent the state-space vocabulary introduced before the lesson moves into production rules.
+
+### Changes
+
+#### state
+- Added the `state` concept.
+- Represents a configuration in the production-system decision space.
+
+#### stateSpace
+- Added the `stateSpace` concept.
+- Represents the set of states reachable by applying operators from an initial state.
+
+#### initialState
+- Added the `initialState` concept.
+- Represents the starting state of the decision problem before operators are applied.
+
+#### goalState
+- Added the `goalState` concept.
+- Represents the desired state in which the agent's goal has been accomplished.
+
+#### feature
+- Added the `feature` concept.
+- Represents an attribute used to describe a state or configuration.
+
+#### featureValue
+- Added the `featureValue` concept.
+- Represents a value assigned to a feature in a feature-value representation.
+
+#### State-Space Relations
+- Added `describedBy` from `state` to `feature`.
+- Added `hasValue` from `feature` to `featureValue`.
+- Added `belongsTo` from `state` to `stateSpace`.
+- Added `hasInitialState` from `stateSpace` to `initialState`.
+- Added `hasGoalState` from `stateSpace` to `goalState`.
+
+### Rationale
+The previous model used `configuration` to cover the idea of feature-value states, but the lesson explicitly introduces states, state spaces, initial states, goal states, features, and feature values before discussing production rules. Adding these concepts makes the model align more directly with the lesson's setup for action selection.

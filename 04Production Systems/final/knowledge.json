@@ -6,6 +6,30 @@
       "description": "A feature-value representation of the current decision situation."
     },
     {
+      "name": "state",
+      "description": "A configuration in the production-system decision space."
+    },
+    {
+      "name": "stateSpace",
+      "description": "The set of states reachable by applying operators from an initial state."
+    },
+    {
+      "name": "initialState",
+      "description": "The starting state of the decision problem before operators are applied."
+    },
+    {
+      "name": "goalState",
+      "description": "The desired state in which the agent's goal has been accomplished."
+    },
+    {
+      "name": "feature",
+      "description": "An attribute used to describe a state or configuration."
+    },
+    {
+      "name": "featureValue",
+      "description": "A value assigned to a feature in a feature-value representation."
+    },
+    {
       "name": "cognitiveArchitecture",
       "description": "An architecture that combines fixed reasoning mechanisms with knowledge content to produce behavior."
     },
@@ -143,9 +167,48 @@
     {
       "name": "soarArchitecture",
       "concept": "SOAR"
+    },
+    {
+      "name": "pitcherInitialState",
+      "concept": "initialState",
+      "values": {
+        "description": "Initial baseball decision state represented by the current percepts and goal."
+      }
+    },
+    {
+      "name": "escapeInningGoalState",
+      "concept": "goalState",
+      "values": {
+        "description": "Goal state in which the inning is escaped without allowing additional runs."
+      }
     }
   ],
   "relations": [
+    {
+      "name": "describedBy",
+      "domain": "state",
+      "range": "feature"
+    },
+    {
+      "name": "hasValue",
+      "domain": "feature",
+      "range": "featureValue"
+    },
+    {
+      "name": "belongsTo",
+      "domain": "state",
+      "range": "stateSpace"
+    },
+    {
+      "name": "hasInitialState",
+      "domain": "stateSpace",
+      "range": "initialState"
+    },
+    {
+      "name": "hasGoalState",
+      "domain": "stateSpace",
+      "range": "goalState"
+    },
     {
       "name": "contains",
       "domain": "workingMemory",
