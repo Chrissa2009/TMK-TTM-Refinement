@@ -1,0 +1,166 @@
+{
+  "model": "Knowledge",
+  "concepts": [
+    {
+      "name": "concept",
+      "description": "A target category or class that the learner is trying to identify."
+    },
+    {
+      "name": "hypothesis",
+      "description": "A candidate description of the target concept."
+    },
+    {
+      "name": "example",
+      "description": "A labeled training instance that is either positive or negative for the target concept."
+    },
+    {
+      "name": "positiveExample",
+      "description": "An example that should be covered by the learned concept."
+    },
+    {
+      "name": "negativeExample",
+      "description": "An example that should not be covered by the learned concept."
+    },
+    {
+      "name": "specificBoundary",
+      "description": "The most specific hypothesis that remains possible after processing the examples."
+    },
+    {
+      "name": "generalBoundary",
+      "description": "The most general hypothesis that remains possible after processing the examples."
+    },
+    {
+      "name": "versionSpace",
+      "description": "The set of all hypotheses between the specific and general boundaries that remain consistent with the examples."
+    },
+    {
+      "name": "candidateElimination",
+      "description": "The learning procedure that removes inconsistent hypotheses as positive and negative examples are processed."
+    },
+    {
+      "name": "configuration",
+      "description": "A snapshot of the current training examples and the hypothesis boundaries."
+    }
+  ],
+  "instances": [
+    {
+      "name": "foodAllergyExample1",
+      "concept": "positiveExample",
+      "values": {
+        "restaurant": "Sam's",
+        "meal": "Breakfast",
+        "day": "Friday",
+        "cost": "Cheap",
+        "reaction": "Yes"
+      }
+    },
+    {
+      "name": "foodAllergyExample2",
+      "concept": "negativeExample",
+      "values": {
+        "restaurant": "Kim's",
+        "meal": "Lunch",
+        "day": "Saturday",
+        "cost": "Cheap",
+        "reaction": "No"
+      }
+    },
+    {
+      "name": "foodAllergyExample3",
+      "concept": "positiveExample",
+      "values": {
+        "restaurant": "Nina's",
+        "meal": "Dinner",
+        "day": "Sunday",
+        "cost": "Expensive",
+        "reaction": "Yes"
+      }
+    },
+    {
+      "name": "initialConfiguration",
+      "concept": "configuration",
+      "values": {
+        "specificBoundary": "mostSpecificHypothesis",
+        "generalBoundary": "mostGeneralHypothesis",
+        "examplesProcessed": 0,
+        "versionSpace": "allPossibleHypotheses"
+      }
+    },
+    {
+      "name": "finalConfiguration",
+      "concept": "configuration",
+      "values": {
+        "specificBoundary": "converged",
+        "generalBoundary": "converged",
+        "examplesProcessed": 3,
+        "versionSpace": "singletonOrSmallSet"
+      }
+    }
+  ],
+  "relations": [
+    {
+      "name": "containsExample",
+      "domain": "configuration",
+      "range": "example"
+    },
+    {
+      "name": "hasSpecificBoundary",
+      "domain": "configuration",
+      "range": "specificBoundary"
+    },
+    {
+      "name": "hasGeneralBoundary",
+      "domain": "configuration",
+      "range": "generalBoundary"
+    },
+    {
+      "name": "definesVersionSpace",
+      "domain": "configuration",
+      "range": "versionSpace"
+    },
+    {
+      "name": "isConsistentWith",
+      "domain": "hypothesis",
+      "range": "example"
+    },
+    {
+      "name": "covers",
+      "domain": "hypothesis",
+      "range": "positiveExample"
+    },
+    {
+      "name": "rejects",
+      "domain": "hypothesis",
+      "range": "negativeExample"
+    }
+  ],
+  "triples": [
+    {
+      "instance1": "initialConfiguration",
+      "relation": "containsExample",
+      "instance2": "foodAllergyExample1"
+    },
+    {
+      "instance1": "initialConfiguration",
+      "relation": "containsExample",
+      "instance2": "foodAllergyExample2"
+    },
+    {
+      "instance1": "initialConfiguration",
+      "relation": "containsExample",
+      "instance2": "foodAllergyExample3"
+    }
+  ],
+  "assertions": [
+    {
+      "name": "candidateEliminationPreservesConsistency",
+      "description": "The version space contains only hypotheses that agree with every example seen so far.",
+      "equivalentTo": "consistentHypotheses(versionSpace)"
+    },
+    {
+      "name": "goodVersionSpace",
+      "description": "When the specific and general boundaries converge, the remaining version space identifies the intended concept.",
+      "equivalentTo": "converged(specificBoundary) && converged(generalBoundary)"
+    }
+  ]
+}

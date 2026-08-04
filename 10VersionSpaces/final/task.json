@@ -1,0 +1,98 @@
+{
+  "model": "Task",
+  "tasks": [
+    {
+      "name": "LearnConceptUsingVersionSpaces",
+      "description": "Learn a target concept by iteratively applying candidate elimination to an arbitrary sequence of labeled examples until convergence.",
+      "inputParameters": [
+        "initialConfiguration: configuration",
+        "knowledgeBase: knowledgeBase"
+      ],
+      "outputParameters": [
+        "finalConfiguration: configuration"
+      ],
+      "given": "hasTrainingExamples(initialConfiguration)",
+      "makes": "goodVersionSpace(finalConfiguration)",
+      "means": [
+        {
+          "mechanismReference": "VersionSpacesSolution",
+          "actualArguments": [
+            "initialConfiguration",
+            "finalConfiguration"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "InitializeVersionSpace",
+      "description": "Set the initial specific and general boundaries from the first training example.",
+      "inputParameters": [
+        "initialConfiguration: configuration"
+      ],
+      "outputParameters": [
+        "modelConfiguration: configuration"
+      ],
+      "means": [
+        {
+          "mechanismReference": "InitializeVersionSpaceMechanism",
+          "actualArguments": [
+            "initialConfiguration",
+            "modelConfiguration"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ProcessExample",
+      "description": "Update the version space for the next labeled example by generalizing the specific boundary for a positive example or specializing the general boundary for a negative example.",
+      "inputParameters": [
+        "modelConfiguration: configuration"
+      ],
+      "outputParameters": [
+        "updatedConfiguration: configuration"
+      ],
+      "means": [
+        {
+          "mechanismReference": "ProcessExampleMechanism",
+          "actualArguments": [
+            "modelConfiguration",
+            "updatedConfiguration"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "CheckConvergence",
+      "description": "Determine whether the specific and general boundaries have converged on a stable concept description.",
+      "inputParameters": [
+        "modelConfiguration: configuration"
+      ],
+      "outputParameters": [
+        "finalConfiguration: configuration"
+      ],
+      "means": [
+        {
+          "mechanismReference": "CheckConvergenceMechanism",
+          "actualArguments": [
+            "modelConfiguration",
+            "finalConfiguration"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "FailureGoal",
+      "description": "Represents unsuccessful execution of concept learning.",
+      "inputParameters": [],
+      "outputParameters": [],
+      "means": []
+    },
+    {
+      "name": "Complete",
+      "description": "Represents successful completion of concept learning.",
+      "inputParameters": [],
+      "outputParameters": [],
+      "means": []
+    }
+  ]
+}

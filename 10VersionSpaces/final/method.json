@@ -1,0 +1,137 @@
+{
+  "model": "Method",
+  "methods": [
+    {
+      "name": "VersionSpacesSolution",
+      "description": "Main control procedure for learning a concept by iteratively processing an arbitrary sequence of labeled examples until the version space converges.",
+      "inputParameters": [
+        "initialConfiguration: configuration",
+        "knowledgeBase: knowledgeBase"
+      ],
+      "outputParameters": [
+        "finalConfiguration: configuration"
+      ],
+      "organizer": {
+        "startState": "S0",
+        "successState": "S4_Complete",
+        "failureState": "S_Fail",
+        "states": [
+          {
+            "name": "S0",
+            "goalInvocation": {
+              "goalReference": "InitializeVersionSpace",
+              "type": "task",
+              "actualArguments": [
+                "initialConfiguration"
+              ]
+            }
+          },
+          {
+            "name": "S1",
+            "goalInvocation": {
+              "goalReference": "ProcessExample",
+              "type": "task",
+              "actualArguments": [
+                "initialConfiguration"
+              ]
+            }
+          },
+          {
+            "name": "S2",
+            "goalInvocation": {
+              "goalReference": "CheckConvergence",
+              "type": "task",
+              "actualArguments": [
+                "initialConfiguration"
+              ]
+            }
+          },
+          {
+            "name": "S4_Complete",
+            "goalInvocation": {
+              "goalReference": "Complete",
+              "type": "task",
+              "actualArguments": []
+            }
+          },
+          {
+            "name": "S_Fail",
+            "goalInvocation": {
+              "goalReference": "FailureGoal",
+              "type": "task",
+              "actualArguments": []
+            }
+          }
+        ],
+        "transitions": [
+          {
+            "sourceState": "S0",
+            "targetState": "S1",
+            "dataCondition": "initialized(versionSpace)"
+          },
+          {
+            "sourceState": "S1",
+            "targetState": "S2",
+            "dataCondition": "noMoreExamples(configuration) || converged(versionSpace)"
+          },
+          {
+            "sourceState": "S1",
+            "targetState": "S1",
+            "dataCondition": "hasNextExample(configuration) && !converged(versionSpace)"
+          },
+          {
+            "sourceState": "S2",
+            "targetState": "S4_Complete",
+            "dataCondition": "converged(versionSpace)"
+          },
+          {
+            "sourceState": "S2",
+            "targetState": "S1",
+            "dataCondition": "!converged(versionSpace) && hasNextExample(configuration)"
+          },
+          {
+            "sourceState": "S2",
+            "targetState": "S_Fail",
+            "dataCondition": "!converged(versionSpace) && noMoreExamples(configuration)"
+          }
+        ]
+      }
+    },
+    {
+      "name": "InitializeVersionSpaceMechanism",
+      "description": "Create the initial specific and general boundaries from the first training example.",
+      "inputParameters": [
+        "initialConfiguration: configuration"
+      ],
+      "outputParameters": [
+        "modelConfiguration: configuration"
+      ],
+      "requires": "firstExampleAvailable",
+      "provides": "versionSpaceInitialized"
+    },
+    {
+      "name": "ProcessExampleMechanism",
+      "description": "Update the version space for the next labeled example by generalizing the specific boundary for a positive example or specializing the general boundary for a negative example.",
+      "inputParameters": [
+        "modelConfiguration: configuration"
+      ],
+      "outputParameters": [
+        "updatedConfiguration: configuration"
+      ],
+      "requires": "nextExampleAvailable",
+      "provides": "exampleProcessed"
+    },
+    {
+      "name": "CheckConvergenceMechanism",
+      "description": "Determine whether the specific and general boundaries have converged to a stable concept description.",
+      "inputParameters": [
+        "modelConfiguration: configuration"
+      ],
+      "outputParameters": [
+        "finalConfiguration: configuration"
+      ],
+      "requires": "versionSpaceAvailable",
+      "provides": "conceptCharacterization"
+    }
+  ]
+}
